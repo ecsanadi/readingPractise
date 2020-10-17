@@ -19,7 +19,7 @@ public:
     ~MainWindow();
 
 private:
-    QLabel *m_select_alphabet;
+    QLabel *m_alphabet;
     QLabel *m_select_mode;
     QPushButton *m_button_next;
     AlphabetWidget *m_alphabet_widget;
@@ -68,10 +68,12 @@ private:
     QCheckBox *zs   ;
     QGroupBox *alphabetGroupBox;
     QGroupBox *controlGroupBox;
-    std::vector<QCheckBox*> m_alphabet_list;
-    std::vector<QCheckBox*> m_alphabet_list_b;
-    std::vector<QCheckBox*> m_alphabet_checked;
-    std::vector<QCheckBox*> m_alphabet_checked_b;
+    std::vector<QCheckBox*> m_alphabet_cb_list;
+    std::vector<QCheckBox*> m_alphabet_cb_list_b;
+    std::vector<std::string> m_alphabet_list;
+    std::vector<std::string> m_alphabet_list_b;
+    std::vector<std::string> m_checked;
+    std::vector<std::string> m_checked_b;
     void generateString(std::string &oString);
     void createAlphabetGroubBox();
     void fillContainers();

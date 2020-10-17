@@ -1,10 +1,11 @@
 #include "mainwindow.h"
 #include <iostream>
+#include <time.h>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
-    m_alphabet_widget = new AlphabetWidget;
+    m_alphabet_widget = new AlphabetWidget(this);
 
     m_amount = 2;
 
@@ -13,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_select_mode = new QLabel("Select amount: ", this);
     // TODO: create selectable amount
+
+    m_alphabet = new QLabel("", this);
 
     createAlphabetGroubBox();
 
@@ -149,48 +152,57 @@ void MainWindow::createAlphabetGroubBox()
 
 void MainWindow::fillContainers()
 {
-    m_alphabet_list.clear();
-    m_alphabet_list_b.clear();
-    m_alphabet_list.push_back(a);
-    m_alphabet_list.push_back(aa  );
-    m_alphabet_list_b.push_back(b   );
-    m_alphabet_list_b.push_back(c   );
-    m_alphabet_list_b.push_back(cs  );
-    m_alphabet_list_b.push_back(d   );
-    m_alphabet_list_b.push_back(dz  );
-    m_alphabet_list_b.push_back(dzs );
-    m_alphabet_list.push_back(e   );
-    m_alphabet_list.push_back(ee  );
-    m_alphabet_list_b.push_back(f   );
-    m_alphabet_list_b.push_back(g   );
-    m_alphabet_list_b.push_back(gy  );
-    m_alphabet_list_b.push_back(h   );
-    m_alphabet_list.push_back(i   );
-    m_alphabet_list.push_back(ii  );
-    m_alphabet_list_b.push_back(j   );
-    m_alphabet_list_b.push_back(k   );
-    m_alphabet_list_b.push_back(l   );
-    m_alphabet_list_b.push_back(ly  );
-    m_alphabet_list_b.push_back(m   );
-    m_alphabet_list_b.push_back(n   );
-    m_alphabet_list_b.push_back(ny  );
-    m_alphabet_list.push_back(o   );
-    m_alphabet_list.push_back(oo  );
-    m_alphabet_list.push_back(ooo );
-    m_alphabet_list.push_back(oooo);
-    m_alphabet_list_b.push_back(p   );
-    m_alphabet_list_b.push_back(r   );
-    m_alphabet_list_b.push_back(s   );
-    m_alphabet_list_b.push_back(sz  );
-    m_alphabet_list_b.push_back(t   );
-    m_alphabet_list_b.push_back(ty  );
-    m_alphabet_list.push_back(u   );
-    m_alphabet_list.push_back(uu  );
-    m_alphabet_list.push_back(uuu );
-    m_alphabet_list.push_back(uuuu);
-    m_alphabet_list_b.push_back(v   );
-    m_alphabet_list_b.push_back(z   );
-    m_alphabet_list_b.push_back(zs  );
+    m_alphabet_cb_list.clear();
+    m_alphabet_cb_list_b.clear();
+    m_alphabet_cb_list.push_back(a);
+    m_alphabet_cb_list.push_back(aa  );
+    m_alphabet_cb_list_b.push_back(b   );
+    m_alphabet_cb_list_b.push_back(c   );
+    m_alphabet_cb_list_b.push_back(cs  );
+    m_alphabet_cb_list_b.push_back(d   );
+    m_alphabet_cb_list_b.push_back(dz  );
+    m_alphabet_cb_list_b.push_back(dzs );
+    m_alphabet_cb_list.push_back(e   );
+    m_alphabet_cb_list.push_back(ee  );
+    m_alphabet_cb_list_b.push_back(f   );
+    m_alphabet_cb_list_b.push_back(g   );
+    m_alphabet_cb_list_b.push_back(gy  );
+    m_alphabet_cb_list_b.push_back(h   );
+    m_alphabet_cb_list.push_back(i   );
+    m_alphabet_cb_list.push_back(ii  );
+    m_alphabet_cb_list_b.push_back(j   );
+    m_alphabet_cb_list_b.push_back(k   );
+    m_alphabet_cb_list_b.push_back(l   );
+    m_alphabet_cb_list_b.push_back(ly  );
+    m_alphabet_cb_list_b.push_back(m   );
+    m_alphabet_cb_list_b.push_back(n   );
+    m_alphabet_cb_list_b.push_back(ny  );
+    m_alphabet_cb_list.push_back(o   );
+    m_alphabet_cb_list.push_back(oo  );
+    m_alphabet_cb_list.push_back(ooo );
+    m_alphabet_cb_list.push_back(oooo);
+    m_alphabet_cb_list_b.push_back(p   );
+    m_alphabet_cb_list_b.push_back(r   );
+    m_alphabet_cb_list_b.push_back(s   );
+    m_alphabet_cb_list_b.push_back(sz  );
+    m_alphabet_cb_list_b.push_back(t   );
+    m_alphabet_cb_list_b.push_back(ty  );
+    m_alphabet_cb_list.push_back(u   );
+    m_alphabet_cb_list.push_back(uu  );
+    m_alphabet_cb_list.push_back(uuu );
+    m_alphabet_cb_list.push_back(uuuu);
+    m_alphabet_cb_list_b.push_back(v   );
+    m_alphabet_cb_list_b.push_back(z   );
+    m_alphabet_cb_list_b.push_back(zs  );
+
+    for(std::vector<QCheckBox*>::iterator it = m_alphabet_cb_list.begin(); it != m_alphabet_cb_list.end();it++)
+    {
+      m_alphabet_list.push_back( ((*it)->text()).toUtf8().constData() );
+    }
+    for(std::vector<QCheckBox*>::iterator it = m_alphabet_cb_list_b.begin(); it != m_alphabet_cb_list_b.end();it++)
+    {
+      m_alphabet_list_b.push_back( ((*it)->text()).toUtf8().constData() );
+    }
 }
 
 QCheckBox *MainWindow::createCheckBox(const QString &text)
@@ -201,47 +213,80 @@ QCheckBox *MainWindow::createCheckBox(const QString &text)
 
 void MainWindow::generateString(std::string &oString)
 {
-    m_alphabet_checked.clear();
-    m_alphabet_checked_b.clear();
+    static int prev_wIdx[2] = {0};
+    static int prev_wIdx_b[2] = {0};
+    m_checked.clear();
+    m_checked.resize(0);
+    m_checked_b.clear();
+    m_checked_b.resize(0);
 
-    for(std::vector<QCheckBox*>::iterator it = m_alphabet_list.begin(); it != m_alphabet_list.end();it++)
+    //unsigned long vIdx = 0;
+    std::vector<std::string>::iterator vIt = m_alphabet_list.begin();
+    for(std::vector<QCheckBox*>::iterator it = m_alphabet_cb_list.begin(); it != m_alphabet_cb_list.end();it++)
     {
       if((*it)->checkState())
       {
-        m_alphabet_checked.push_back(*it);
+        m_checked.push_back(*vIt);
       }
+      vIt++;
     }
 
-    for(std::vector<QCheckBox*>::iterator it = m_alphabet_list_b.begin(); it != m_alphabet_list_b.end();it++)
+    std::vector<std::string>::iterator vIt_b = m_alphabet_list_b.begin();
+    for(std::vector<QCheckBox*>::iterator it = m_alphabet_cb_list_b.begin(); it != m_alphabet_cb_list_b.end();it++)
     {
       if((*it)->checkState())
       {
-        m_alphabet_checked_b.push_back(*it);
+        m_checked_b.push_back(*vIt_b);
       }
+      vIt_b++;
     }
 
-    int a_size = m_alphabet_checked.size();
-    int b_size = m_alphabet_checked_b.size();
 
-    QString qs = "";
-    int wFirst = rand() % 1;
+    for(std::vector<std::string>::iterator it=m_checked.begin(); it != m_checked.end();it++)
+    {
+        std::cout << *it << std::endl;
+    }
+
+    for(std::vector<std::string>::iterator it=m_checked_b.begin(); it != m_checked_b.end();it++)
+    {
+        std::cout << *it << std::endl;
+    }
+
+
+
+    int a_size = m_checked.size();
+    int b_size = m_checked_b.size();
+
+    //QString qs = "";
+
+    srand (time(NULL));
+    int wFirst = (rand() % 2);
 
     for (int i = 0 ; i < m_amount ; i++)
     {
-        int wIdx =(a_size>0) ? (rand() % a_size) : 0;
-        int wIdx_b = (b_size>0) ? (rand() % b_size) : 0;
+        //std::vector<QCheckBox*>::iterator it_b = m_alphabet_list_b.begin();
+
+        srand (time(NULL));
+        int wIdx =(a_size>0) ? (rand() % (a_size)) : 0;
+        wIdx = (wIdx == prev_wIdx[i])?   ( ((wIdx + 1)>=a_size) ? --wIdx : ++wIdx  )  : wIdx;
+        prev_wIdx[i] = wIdx;
+        srand (time(NULL));
+        int wIdx_b = (b_size>0) ? (rand() % (b_size)) : 0;
+        wIdx_b = (wIdx_b == prev_wIdx_b[i])?   ( ((wIdx_b + 1)>=b_size) ? --wIdx_b : ++wIdx_b  )  : wIdx;
+        prev_wIdx_b[i] = wIdx_b;
+
         if(wFirst)
         {
-            qs += (a_size>0) ? m_alphabet_checked.at(wIdx)->text() : "";
+            oString += (a_size>0) ?  m_checked.at(wIdx) : "";
             wFirst = 0;
         }
         else
         {
-            qs += (b_size>0) ? m_alphabet_checked_b.at(wIdx_b)->text() : "";
+            oString += (b_size>0) ? m_checked_b.at(wIdx_b) : "";
             wFirst = 1;
         }
     }
-    oString = qs.toUtf8().constData();
+    //oString = qs.toUtf8().constData();
     std::cout << oString << std::endl;
 }
 
@@ -249,5 +294,7 @@ void MainWindow::getNextExcercise()
 {
     std::string wString;
     generateString(wString);
-    m_alphabet_widget->displayItem(wString);
+    //m_alphabet_widget->displayItem(wString);
+    QString qs = QString::fromUtf8(wString.c_str());
+    m_alphabet->setText(qs);
 }
