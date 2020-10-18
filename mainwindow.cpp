@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include <iostream>
 #include <time.h>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -8,14 +9,19 @@ MainWindow::MainWindow(QWidget *parent)
     m_alphabet_widget = new AlphabetWidget(this);
 
     m_amount = 2;
+    m_score_limit = 50;
 
     m_button_next = new QPushButton("Next", this);
     connect(m_button_next, SIGNAL (clicked()), this, SLOT (getNextExcercise()));
 
-    m_select_mode = new QLabel("Select amount: ", this);
-    // TODO: create selectable amount
+    m_score_label = new QLabel("Score: ", this);
 
     m_alphabet = new QLabel("", this);
+    QFont f( "Arial", 30, QFont::Bold);
+    m_alphabet->setFont(f);
+
+    m_score_text = new QLabel("0", this);
+    m_score = 0;
 
     createAlphabetGroubBox();
 
@@ -25,8 +31,13 @@ MainWindow::MainWindow(QWidget *parent)
 
     QHBoxLayout *controlLayout = new QHBoxLayout;
     controlLayout->addStretch();
-    controlLayout->addWidget(m_button_next);
-    controlLayout->addWidget(m_select_mode);
+
+    QGridLayout *controlGrid = new QGridLayout;
+    controlGrid->addWidget(m_alphabet, 0,0);
+    controlGrid->addWidget(m_button_next,1,0);
+    controlGrid->addWidget(m_score_label, 2,0);
+    controlGrid->addWidget(m_score_text,2,1);
+    controlLayout->addLayout(controlGrid);
 
     QHBoxLayout *alphabetLayout = new QHBoxLayout;
     alphabetLayout->addWidget(alphabetGroupBox,Qt::AlignRight);
@@ -290,11 +301,53 @@ void MainWindow::generateString(std::string &oString)
     std::cout << oString << std::endl;
 }
 
+void MainWindow::setQstringLink(QString &link)
+{
+    static int wIdx = 0;
+    QString links[10];
+    links[0] = "https://www.youtube.com/watch?v=xcgW3s-NBBI";
+    links[1] = "https://www.youtube.com/watch?v=jHWKtQHXVJg";
+    links[2] = "https://www.youtube.com/watch?v=KydI7KF3YkM";
+    links[3] = "https://www.youtube.com/watch?v=I-ovzUNno7g";
+    links[4] = "https://www.youtube.com/watch?v=sGF6bOi1NfA";
+    links[5] = "https://www.youtube.com/watch?v=q625P-DBRd4";
+    links[6] = "https://www.youtube.com/watch?v=CGilPYScFLQ";
+    links[7] = "https://www.youtube.com/watch?v=Ikw5HhxC5UM";
+    links[8] = "https://www.youtube.com/watch?v=Z4XyNduV5bw";
+    links[9] = "https://www.youtube.com/watch?v=Gjfx4BBD93U";
+
+
+    link = links[wIdx];
+
+    wIdx++;
+
+    if(wIdx == 10)
+    {
+        wIdx = 0;
+    }
+
+
+}
 void MainWindow::getNextExcercise()
 {
     std::string wString;
     generateString(wString);
-    //m_alphabet_widget->displayItem(wString);
+
     QString qs = QString::fromUtf8(wString.c_str());
     m_alphabet->setText(qs);
+    m_score += (m_amount - 1);
+    QString score = QString::number(m_score);
+    m_score_text->setText(score);
+     QString link;
+
+
+    if(m_score >= m_score_limit)
+    {
+        // m_alphabet_widget->displayItem();
+         m_score_limit += 50;
+         setQstringLink(link);
+         QDesktopServices::openUrl(QUrl(link));
+         m_amount++;
+    }
+
 }

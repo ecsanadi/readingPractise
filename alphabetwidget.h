@@ -3,14 +3,22 @@
 
 #include <QWidget>
 #include <string>
-
+#include <QWebEngineView>
+#include <QMediaPlayer>
+#include <QVideoWidget>
+#include <QMediaPlaylist>
 class AlphabetWidget : public QWidget
 {
 
 public:
     AlphabetWidget(QWidget *parent = nullptr): QWidget(parent)
     {}
-    void displayItem(std::string iText);
+    void displayItem();
+    QWebEngineView *m_view;
+    QMediaPlayer *player;
+    QMediaPlaylist *playlist;
+    QVideoWidget *videoWidget;
+
 
 signals:
 

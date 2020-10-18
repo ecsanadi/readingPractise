@@ -20,7 +20,10 @@ public:
 
 private:
     QLabel *m_alphabet;
-    QLabel *m_select_mode;
+    QLabel *m_score_label;
+    QLabel *m_score_text;
+    int m_score;
+    int m_score_limit;
     QPushButton *m_button_next;
     AlphabetWidget *m_alphabet_widget;
     QGridLayout *mainLayout;
@@ -77,6 +80,7 @@ private:
     void generateString(std::string &oString);
     void createAlphabetGroubBox();
     void fillContainers();
+    void setQstringLink(QString &link);
     QCheckBox* createCheckBox(const QString &text);
 private slots:
     void getNextExcercise();
