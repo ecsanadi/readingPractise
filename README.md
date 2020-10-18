@@ -6,4 +6,4 @@ Score is increasing by reading new "words".
 After every 50 points the amount of alphabets will inreasing by still using only selected ones.
 Also the default browser will opens and plays pre-selected videos as a reward.
 
-![Alt text](img/readingPractise.png?raw=true "screenshot")
+![Screenshot](img/readingPractise.png)
