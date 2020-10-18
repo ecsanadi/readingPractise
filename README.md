@@ -7,3 +7,6 @@ After every 50 points the amount of alphabets will inreasing by still using only
 Also the default browser will opens and plays pre-selected videos as a reward.
 
 ![Screenshot](img/readingPractise.png)
+
+
+![Screenshot](img/readingPractise2.png)
