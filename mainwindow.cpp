@@ -23,6 +23,9 @@ MainWindow::MainWindow(QWidget *parent)
     m_score_text = new QLabel("0", this);
     m_score = 0;
 
+    m_prev_idx.resize(m_amount);
+    m_prev_idx_b.resize(m_amount);
+
     createAlphabetGroubBox();
 
     fillContainers();
@@ -112,6 +115,9 @@ void MainWindow::createAlphabetGroubBox()
     e->setChecked(true);
     i->setChecked(true);
     t->setChecked(true);
+    l->setChecked(true);
+    v->setChecked(true);
+    oo->setChecked(true);
 
     QGridLayout *layout = new QGridLayout;
 
@@ -224,14 +230,11 @@ QCheckBox *MainWindow::createCheckBox(const QString &text)
 
 void MainWindow::generateString(std::string &oString)
 {
-    static int prev_wIdx[2] = {0};
-    static int prev_wIdx_b[2] = {0};
     m_checked.clear();
     m_checked.resize(0);
     m_checked_b.clear();
     m_checked_b.resize(0);
 
-    //unsigned long vIdx = 0;
     std::vector<std::string>::iterator vIt = m_alphabet_list.begin();
     for(std::vector<QCheckBox*>::iterator it = m_alphabet_cb_list.begin(); it != m_alphabet_cb_list.end();it++)
     {
@@ -252,81 +255,59 @@ void MainWindow::generateString(std::string &oString)
       vIt_b++;
     }
 
-
-    for(std::vector<std::string>::iterator it=m_checked.begin(); it != m_checked.end();it++)
-    {
-        std::cout << *it << std::endl;
-    }
-
-    for(std::vector<std::string>::iterator it=m_checked_b.begin(); it != m_checked_b.end();it++)
-    {
-        std::cout << *it << std::endl;
-    }
-
-
-
     int a_size = m_checked.size();
     int b_size = m_checked_b.size();
-
-    //QString qs = "";
 
     srand (time(NULL));
     int wFirst = (rand() % 2);
 
     for (int i = 0 ; i < m_amount ; i++)
     {
-        //std::vector<QCheckBox*>::iterator it_b = m_alphabet_list_b.begin();
-
-        srand (time(NULL));
-        int wIdx =(a_size>0) ? (rand() % (a_size)) : 0;
-        wIdx = (wIdx == prev_wIdx[i])?   ( ((wIdx + 1)>=a_size) ? --wIdx : ++wIdx  )  : wIdx;
-        prev_wIdx[i] = wIdx;
-        srand (time(NULL));
-        int wIdx_b = (b_size>0) ? (rand() % (b_size)) : 0;
-        wIdx_b = (wIdx_b == prev_wIdx_b[i])?   ( ((wIdx_b + 1)>=b_size) ? --wIdx_b : ++wIdx_b  )  : wIdx;
-        prev_wIdx_b[i] = wIdx_b;
 
         if(wFirst)
         {
+            int wIdx =(a_size>0) ? (rand() % a_size) : 0;
+            wIdx = (wIdx == m_prev_idx.at(i))?   ( ((wIdx + 1)>=a_size) ? --wIdx : ++wIdx  )  : wIdx;
+            m_prev_idx.at(i) = wIdx;
             oString += (a_size>0) ?  m_checked.at(wIdx) : "";
             wFirst = 0;
         }
         else
         {
+            int wIdx_b = (b_size>0) ? (rand() % b_size) : 0;
+            wIdx_b = (wIdx_b == m_prev_idx_b.at(i))?   ( ((wIdx_b + 1)>=b_size) ? --wIdx_b : ++wIdx_b  )  : wIdx_b;
+            m_prev_idx_b.at(i) = wIdx_b;
             oString += (b_size>0) ? m_checked_b.at(wIdx_b) : "";
             wFirst = 1;
         }
     }
-    //oString = qs.toUtf8().constData();
     std::cout << oString << std::endl;
 }
 
 void MainWindow::setQstringLink(QString &link)
 {
-    static int wIdx = 0;
-    QString links[10];
-    links[0] = "https://www.youtube.com/watch?v=xcgW3s-NBBI";
-    links[1] = "https://www.youtube.com/watch?v=jHWKtQHXVJg";
-    links[2] = "https://www.youtube.com/watch?v=KydI7KF3YkM";
-    links[3] = "https://www.youtube.com/watch?v=I-ovzUNno7g";
-    links[4] = "https://www.youtube.com/watch?v=sGF6bOi1NfA";
-    links[5] = "https://www.youtube.com/watch?v=q625P-DBRd4";
-    links[6] = "https://www.youtube.com/watch?v=CGilPYScFLQ";
-    links[7] = "https://www.youtube.com/watch?v=Ikw5HhxC5UM";
-    links[8] = "https://www.youtube.com/watch?v=Z4XyNduV5bw";
-    links[9] = "https://www.youtube.com/watch?v=Gjfx4BBD93U";
 
+    std::vector<QString> links;
+    links.push_back("https://www.youtube.com/watch?v=xcgW3s-NBBI");
+    links.push_back("https://www.youtube.com/watch?v=jHWKtQHXVJg");
+    links.push_back("https://www.youtube.com/watch?v=KydI7KF3YkM");
+    links.push_back("https://www.youtube.com/watch?v=I-ovzUNno7g");
+    links.push_back("https://www.youtube.com/watch?v=sGF6bOi1NfA");
+    links.push_back("https://www.youtube.com/watch?v=q625P-DBRd4");
+    links.push_back("https://www.youtube.com/watch?v=CGilPYScFLQ");
+    links.push_back("https://www.youtube.com/watch?v=Ikw5HhxC5UM");
+    links.push_back("https://www.youtube.com/watch?v=Z4XyNduV5bw");
+    links.push_back("https://www.youtube.com/watch?v=Gjfx4BBD93U");
+    links.push_back("https://www.youtube.com/watch?v=hDJkFLnmFHU");
+    links.push_back("https://www.youtube.com/watch?v=Z98ZxYFsIWo");
 
-    link = links[wIdx];
+    int link_amount = links.size();
+    srand (time(0));
+    int wIdx = (rand() % link_amount);
 
-    wIdx++;
+    link = links.at(wIdx);
 
-    if(wIdx == 10)
-    {
-        wIdx = 0;
-    }
-
-
+    std::cout << "wIdx: " << wIdx << std::endl;
 }
 void MainWindow::getNextExcercise()
 {
@@ -338,8 +319,7 @@ void MainWindow::getNextExcercise()
     m_score += (m_amount - 1);
     QString score = QString::number(m_score);
     m_score_text->setText(score);
-     QString link;
-
+    QString link;
 
     if(m_score >= m_score_limit)
     {
@@ -348,6 +328,7 @@ void MainWindow::getNextExcercise()
          setQstringLink(link);
          QDesktopServices::openUrl(QUrl(link));
          m_amount++;
+         m_prev_idx.resize(m_amount);
+         m_prev_idx_b.resize(m_amount);
     }
-
 }

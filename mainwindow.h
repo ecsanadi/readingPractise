@@ -77,6 +77,8 @@ private:
     std::vector<std::string> m_alphabet_list_b;
     std::vector<std::string> m_checked;
     std::vector<std::string> m_checked_b;
+    std::vector<int> m_prev_idx;
+    std::vector<int> m_prev_idx_b;
     void generateString(std::string &oString);
     void createAlphabetGroubBox();
     void fillContainers();
