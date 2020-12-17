@@ -82,6 +82,8 @@ private:
     QCheckBox *zs   ;
     QGroupBox *alphabetGroupBox;
     QGroupBox *controlGroupBox;
+    QLabel *m_randomLabel;
+    QCheckBox *m_randomCehckbox;
     std::vector<QCheckBox*> m_alphabet_cb_list;
     std::vector<QCheckBox*> m_alphabet_cb_list_b;
     std::vector<std::string> m_alphabet_list;
