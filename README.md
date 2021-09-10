@@ -10,3 +10,5 @@ Also the default browser will opens and plays pre-selected videos as a reward.
 
 
 ![Screenshot](img/readingPractise2.png)
+
+// TODO: handle dictionary some elegand way
